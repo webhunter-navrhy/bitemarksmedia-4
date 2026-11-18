@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.built_page %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+{{ m.page_hero(P.kicker, P.h1, P.lead, [('', 'Built by')], cls='phero-maroon phero-pad') }}
+<section class="sec" aria-label="Built by">
+  <div class="wrap vtiles">
+    {% for v in t.ventures %}{{ m.venture_tile(v) }}{% endfor %}
+  </div>
+</section>
+{{ m.cta() }}
+{% endblock %}

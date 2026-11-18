@@ -1,0 +1,234 @@
+{%- macro href(p='') -%}{{ base }}{{ pre }}{{ p }}{%- endmacro -%}
+{%- macro pic(name, alt='', sizes='100vw', cls='', eager=False) -%}
+{%- set im = IMG[name] -%}
+<img class="{{ cls }}" src="{{ base }}img/{{ name }}-{{ im.w[-1] }}.webp?v={{ im.v }}" srcset="{% for w in im.w %}{{ base }}img/{{ name }}-{{ w }}.webp?v={{ im.v }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}" width="{{ im.W }}" height="{{ im.H }}" alt="{{ alt }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy" decoding="async"{% endif %}>
+{%- endmacro -%}
+{%- macro arrow() -%}<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>{%- endmacro -%}
+{%- macro ext() -%}<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>{%- endmacro -%}
+
+{# přerušovaná elipsa z loga kolem slova #}
+{%- macro ring(word) -%}<span class="ring">{{ word }}<svg class="ring-svg" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="100" cy="50" rx="97" ry="45"/></svg></span>{%- endmacro -%}
+
+{%- macro head(kicker, title, id, link=None, link_label='', ext_link=False, cls='') -%}
+<div class="shead {{ cls }}">
+  <p class="lbl">{{ kicker }}</p>
+  <h2 class="h2" id="{{ id }}">{{ title | acc }}</h2>
+  {% if link %}<a class="tlink" href="{{ link }}"{% if ext_link %} target="_blank" rel="noopener"{% endif %}><span>{{ link_label }}</span>{{ ext() if ext_link else arrow() }}</a>{% endif %}
+</div>
+{%- endmacro -%}
+
+{%- macro crumbs(items) -%}
+<nav class="crumbs lbl" aria-label="Breadcrumb"><a href="{{ href() }}">{{ ui.home }}</a>{% for href_, label in items %}<span aria-hidden="true">/</span>{% if href_ %}<a href="{{ href(href_) }}">{{ label }}</a>{% else %}<span aria-current="page">{{ label }}</span>{% endif %}{% endfor %}</nav>
+{%- endmacro -%}
+
+{# úvod podstránky: klidná modrá plocha, velký titulek, perex vpravo, pod tím široká fotka #}
+{%- macro page_hero(kicker, h1, lead='', items=(), img=None, alt='', tone='bw', cls='', side=None, side_tone='bw') -%}
+<section class="phero {{ cls }}">
+  <div class="wrap">
+    {{ crumbs(items) }}
+    {% if side %}
+    <div class="phero-side">
+      <div class="phero-side-copy">
+        <p class="lbl phero-k">{{ kicker }}</p>
+        <h1 class="phero-h1">{{ h1 | acc }}</h1>
+        {% if lead %}<p class="phero-lead">{{ lead }}</p>{% endif %}
+        {{ caller() if caller else '' }}
+      </div>
+      <figure class="phero-side-img {{ side_tone }}">{{ pic(side, alt, '(min-width: 960px) 40vw, 94vw', eager=True) }}</figure>
+    </div>
+    {% else %}
+    <div class="phero-grid">
+      <div>
+        <p class="lbl phero-k">{{ kicker }}</p>
+        <h1 class="phero-h1">{{ h1 | acc }}</h1>
+      </div>
+      {% if lead %}<p class="phero-lead">{{ lead }}</p>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% if img %}<div class="wrap"><figure class="phero-img {{ tone }}">{{ pic(img, alt, '(min-width: 1400px) 1320px, 94vw', eager=True) }}</figure></div>{% endif %}
+</section>
+{%- endmacro -%}
+
+{%- macro svc_card(s) -%}
+{%- set k = SERVICE_IMG[s.slug] -%}
+<a class="svc" href="{{ href('sluzby/' ~ s.slug ~ '/') }}">
+  <span class="svc-img{% if not k.startswith('r-') %} bw{% endif %}">{{ pic(k, '', '(min-width: 1100px) 30vw, (min-width: 700px) 46vw, 92vw') }}</span>
+  <span class="svc-name" lang="en">{{ s.name }}</span>
+  <span class="svc-short">{{ s.short }}</span>
+  <span class="svc-go">{{ arrow() }}</span>
+</a>
+{%- endmacro -%}
+
+{%- macro work_media(w, sizes='(min-width: 1100px) 56vw, 94vw') -%}
+{%- if w.slug == 'forbes' -%}<span class="wm wm-blue">{{ pic('r-covers', w.title, sizes) }}</span>
+{%- elif w.slug == 'socialni-site' -%}<span class="wm wm-cream wm-cars">{% for k in ('car-skoda-1', 'car-gls-1', 'car-raynet-1') %}<span class="wm-car">{{ pic(k, '' if not loop.first else w.title, '(min-width: 900px) 14vw, 30vw') }}</span>{% endfor %}</span>
+{%- else -%}<span class="wm bw">{{ pic(w.img, w.title, sizes) }}</span>{%- endif -%}
+{%- endmacro -%}
+
+{%- macro case_row(w, i=0) -%}
+<article class="case{% if i is odd %} case-rev{% endif %}">
+  <a class="case-media" href="{{ href('prace/' ~ w.slug ~ '/') }}" tabindex="-1" aria-hidden="true">{{ work_media(w) }}</a>
+  <div class="case-copy">
+    <p class="lbl case-meta">{% if not w.hide_client %}<span>{{ w.client }}</span>{% endif %}<span lang="en">{{ w.disc }}</span></p>
+    <h3 class="h3"><a href="{{ href('prace/' ~ w.slug ~ '/') }}">{{ w.title | acc }}</a></h3>
+    <p class="case-short">{{ w.lead }}</p>
+    <dl class="case-role"><dt class="lbl">{{ ui.role }}</dt><dd>{{ w.role | join(' · ') }}</dd></dl>
+    <a class="tlink" href="{{ href('prace/' ~ w.slug ~ '/') }}"><span>{{ ui.read_more }}</span>{{ arrow() }}</a>
+  </div>
+</article>
+{%- endmacro -%}
+
+{%- macro work_tile(w) -%}
+<a class="wtile" href="{{ href('prace/' ~ w.slug ~ '/') }}">
+  <span class="wtile-media">{{ work_media(w, '(min-width: 900px) 44vw, 94vw') }}</span>
+  <span class="lbl case-meta">{% if not w.hide_client %}<span>{{ w.client }}</span>{% endif %}<span lang="en">{{ w.disc }}</span></span>
+  <span class="wtile-title">{{ w.title | acc }}</span>
+</a>
+{%- endmacro -%}
+
+{%- macro venture_row(v) -%}
+{%- set pk = v.peek or v.img -%}
+<li><a class="vrow" href="{{ href('built-by/' ~ v.slug ~ '/') }}"{% if pk %} data-img="{{ base }}img/{{ pk }}-{{ IMG[pk].w[0] }}.webp?v={{ IMG[pk].v }}"{% endif %}>
+  <span class="vrow-logo vl-{{ v.logo }}" role="img" aria-label="{{ v.name }}">{{ VLOGO[v.logo] | safe }}</span>
+  <span class="vrow-cat lbl">{{ v.cat }}{% if v.when %}<br>{{ v.when }}{% endif %}</span>
+  <span class="vrow-short">{{ v.short }}</span>
+  <span class="vrow-go">{{ arrow() }}</span>
+</a></li>
+{%- endmacro -%}
+
+{%- macro venture_tile(v) -%}
+<a class="vtile" href="{{ href('built-by/' ~ v.slug ~ '/') }}">
+  {%- set ti = {'asd-fest': 'asd-spark', 'hasobeh': 'haso-run'}.get(v.slug) -%}
+  <span class="vtile-media">{% if ti %}{{ pic(ti, '', '(min-width: 900px) 44vw, 94vw') }}{% endif %}<span class="vtile-logo vl-{{ v.logo }}" role="img" aria-label="{{ v.name }}">{{ VLOGO[v.logo] | safe }}</span></span>
+  <span class="lbl case-meta"><span>{{ v.cat }}</span>{% if v.when %}<span>{{ v.when }}</span>{% endif %}</span>
+  <span class="wtile-title">{{ v.short }}</span>
+</a>
+{%- endmacro -%}
+
+{%- macro post(p, sizes='(min-width: 900px) 30vw, 92vw', cls='') -%}
+<article class="post {{ cls }}"><a href="{{ p[4] }}" target="_blank" rel="noopener" lang="cs">
+  <span class="post-img bw">{{ pic(p[0], '', sizes) }}</span>
+  <span class="lbl post-meta">{{ p[2] }} · {{ p[1] }}</span>
+  <span class="post-title">{{ p[3] }}</span>
+</a></article>
+{%- endmacro -%}
+
+{%- macro cta() -%}
+<section class="cta" aria-labelledby="h-cta">
+  <div class="cta-panel">
+    <figure class="cta-bg" aria-hidden="true">{{ pic('r4-hero2', '', '100vw') }}</figure>
+    <div class="cta-in">
+      <p class="pill pill-glass" lang="en"><i class="dot" aria-hidden="true"></i>Let’s talk</p>
+      <h2 class="cta-title" id="h-cta" lang="en">Ready to leave a {{ ring('mark?') }}</h2>
+      <p class="cta-text">{{ ui.cta_text }}</p>
+      <div class="cta-row">
+        <a class="btn btn-maroon" href="{{ href('kontakt/') }}"><span>{{ ui.cta_button }}</span>{{ arrow() }}</a>
+        <a class="cta-mail" href="mailto:{{ c.email }}">{{ c.email }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{%- endmacro -%}
+
+{%- macro covers(keys=('kvt','shr','ci','k26'), reader=False, sizes='(min-width: 900px) 18vw, 42vw', mags=()) -%}
+<div class="covers">
+  {% for k in keys %}
+  {% if reader %}<button type="button" class="cov" data-mag="{{ k }}" data-title="{{ ((mags | selectattr(0, 'equalto', k) | first) or ('', ''))[1] }}" style="--i:{{ loop.index0 }}">{% else %}<span class="cov" style="--i:{{ loop.index0 }}">{% endif %}
+    {{ pic('cover-' ~ k, '', sizes) }}
+  {% if reader %}</button>{% else %}</span>{% endif %}
+  {% endfor %}
+</div>
+{%- endmacro -%}
+
+{%- macro reader() -%}
+<div class="reader" id="reader" hidden role="dialog" aria-modal="true" aria-labelledby="reader-title">
+  <div class="reader-top">
+    <p class="reader-title" id="reader-title"></p>
+    <p class="reader-count"><span class="reader-n">1</span> / 16</p>
+    <button class="reader-x" type="button" aria-label="{{ ui.close }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></button>
+  </div>
+  <div class="reader-stage">
+    <button class="reader-nav reader-prev" type="button" aria-label="{{ ui.reader_prev }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="reader-spread"><img class="reader-a" alt=""><img class="reader-b" alt=""></div>
+    <button class="reader-nav reader-next" type="button" aria-label="{{ ui.reader_next }}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+{%- endmacro -%}
+
+{%- macro meta_list(rows) -%}
+<dl class="meta">{% for k, v in rows %}<div><dt class="lbl">{{ k }}</dt><dd>{{ v }}</dd></div>{% endfor %}</dl>
+{%- endmacro -%}
+
+{%- macro logos(kicker) -%}
+<div class="logos-wrap">
+  <p class="lbl" lang="en">{{ kicker }}</p>
+  <ul class="logos" role="list">{% for k in c.clients %}<li><img src="{{ base }}img/logo-{{ k }}.png?v={{ LOGOS[k].v }}" width="{{ LOGOS[k].w }}" height="{{ LOGOS[k].h }}" alt="{{ c.client_names[k] }}" loading="lazy" decoding="async"></li>{% endfor %}</ul>
+</div>
+{%- endmacro -%}
+
+{%- macro partner_wall(P) -%}
+<section class="sec pwall-sec" aria-labelledby="h-partners">
+  <div class="wrap">
+    <div class="pwall-head">
+      <p class="lbl">{{ P.partners_kicker }}</p>
+      <h2 class="h2" id="h-partners">{{ P.partners_title | acc }}</h2>
+      <p class="pwall-lead">{{ P.partners_lead }}</p>
+    </div>
+    {% for title, cats in P.partner_groups %}
+    {% set items = [] %}{% for ct in cats %}{% for x in PARTNERS.get(ct, []) %}{% do items.append(x) %}{% endfor %}{% endfor %}
+    <div class="pgroup">
+      <p class="pgroup-t"><span>{{ title }}</span><span class="pgroup-n">{{ items | length }}</span></p>
+      <ul class="pwall" role="list">
+        {% for x in items %}{% set nm = x.name %}<li><img src="{{ base }}img/p/{{ x.slug }}.png?v={{ x.v }}" width="{{ x.w }}" height="{{ x.h }}" style="width:{{ x.cw }}rem" alt="{{ nm }}" title="{{ nm }}" loading="lazy" decoding="async"></li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{%- endmacro -%}
+
+{%- macro office(A) -%}
+<section class="sec office" aria-labelledby="h-office">
+  <div class="wrap">
+    <div class="office-head">
+      <p class="lbl">{{ A.office_kicker }}</p>
+      <h2 class="h2" id="h-office">{{ A.office_title | acc }}</h2>
+      <p class="office-lead">{{ A.office_lead }}</p>
+    </div>
+    {% set q = 'Náměstí Republiky 7, 110 00 Praha 1' %}
+    <div class="office-grid">
+      <figure class="of of-a">{{ pic(A.office_imgs[0], A.office_alts[0], '(min-width: 900px) 46vw, 94vw') }}</figure>
+      <figure class="of of-b">{{ pic(A.office_imgs[1], A.office_alts[1], '(min-width: 900px) 22vw, 46vw') }}</figure>
+      <figure class="of of-c">{{ pic(A.office_imgs[2], A.office_alts[2], '(min-width: 900px) 22vw, 46vw') }}</figure>
+      <a class="of-map" href="https://www.google.com/maps/dir/?api=1&destination={{ q | urlencode }}" target="_blank" rel="noopener" aria-label="{{ A.office_route }}: {{ q }}">
+        <iframe src="https://www.google.com/maps/embed?origin=mfe&amp;pb=!1m3!2m1!1s{{ q | replace(' ', '+') | urlencode | replace('%2B', '+') }}!6i16!3m1!1s{{ t.lang }}!5m1!1s{{ t.lang }}" title="{{ A.office_map }}" loading="lazy" tabindex="-1" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <span class="of-pin" aria-hidden="true"><svg viewBox="0 0 200 200" preserveAspectRatio="none"><ellipse cx="100" cy="100" rx="96" ry="94"/></svg><i></i></span>
+        <span class="of-route">{{ A.office_route }} {{ arrow() }}</span>
+      </a>
+    </div>
+    <p class="of-note">{{ A.office_note }}</p>
+    <div class="office-info">
+      <div class="oi"><p class="lbl">{{ A.post }}</p><p class="oi-big">{{ c.company }}<br>Náměstí Republiky 7<br>110 00 Praha 1</p><p class="oi-small">{{ A.metro }}</p></div>
+      <div class="oi"><p class="lbl">{{ A.billing }}</p><p>{{ c.company }}<br>{{ c.street }}<br>{{ c.zip }} {{ c.city }}</p><p class="oi-small">{{ ui.legal_ico }} {{ c.ico }}<br>{{ ui.legal_dic }} {{ c.dic }}</p></div>
+      <div class="oi"><p class="lbl">{{ A.socials }}</p><ul class="oi-soc" role="list">
+        <li><a href="{{ c.linkedin }}" target="_blank" rel="noopener"><span>LinkedIn</span>{{ ext() }}</a></li>
+        <li><a href="{{ c.instagram }}" target="_blank" rel="noopener"><span>Instagram</span>{{ ext() }}</a></li>
+        <li><a href="{{ c.facebook }}" target="_blank" rel="noopener"><span>Facebook</span>{{ ext() }}</a></li>
+        <li><a href="{{ c.journal }}" target="_blank" rel="noopener"><span>bitemarks.cz</span>{{ ext() }}</a></li>
+      </ul></div>
+      <div class="oi"><p class="lbl">{{ ui.footer_contact }}</p><p><a href="mailto:{{ c.email }}">{{ c.email }}</a><br><a href="tel:{{ c.phone_href }}">{{ c.phone }}</a></p><p class="oi-small">{{ ui.hours }}</p></div>
+    </div>
+  </div>
+</section>
+{%- endmacro -%}
+
+{%- macro next_link(label, name, url) -%}
+<section class="nextl" aria-label="{{ label }}">
+  <a class="wrap nextl-in" href="{{ url }}">
+    <span class="lbl">{{ label }}</span>
+    <span class="nextl-name">{{ name | acc }}</span>
+    <span class="nextl-go">{{ arrow() }}</span>
+  </a>
+</section>
+{%- endmacro -%}

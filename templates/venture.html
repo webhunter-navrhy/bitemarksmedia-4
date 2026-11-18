@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% block title %}{{ v.name }} — Built by Bite Marks{% endblock %}
+{% block description %}{{ v.lead[:155] }}{% endblock %}
+{% block main %}
+<section class="phero phero-maroon phero-pad">
+  <div class="wrap">
+    {{ m.crumbs([('built-by/', 'Built by'), ('', v.name)]) }}
+    <p class="lbl phero-k">{{ v.cat }}</p>
+    <h1 class="vlogo-big vl-{{ v.logo }}"><span class="sr">{{ v.name }}</span>{{ VLOGO[v.logo] | safe }}</h1>
+    <div class="phero-grid">
+      <div><p class="vhero-lead">{{ v.lead }}</p></div>
+      <div class="vhero-side">
+        {{ m.meta_list(v.facts) }}
+        {% if v.url %}<a class="btn btn-cream" href="{{ v.url }}" target="_blank" rel="noopener"><span>{{ ui.visit }}</span>{{ m.ext() }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if v.img %}
+<section class="wrap pull-up"><figure class="media media-wide bw">{{ m.pic(v.img, v.name, '(min-width: 1400px) 1320px, 94vw') }}</figure></section>
+{% endif %}
+
+<section class="sec" aria-label="{{ v.name }}">
+  <div class="wrap">
+    <div class="blocks">
+      {% for title, text in v.blocks %}<div class="block"><p class="block-t">{{ title }}</p><p class="block-d">{{ text }}</p></div>{% endfor %}
+    </div>
+    {% if v.partners %}<div class="partners-line"><p class="lbl">{{ v.partners_label }}</p><p>{{ v.partners }}</p></div>{% endif %}
+  </div>
+</section>
+
+{% if v.slug == 'asd-fest' %}
+<section class="sec sec-tight sec-cream"><div class="wrap split"><div class="split-head"><p class="lbl">asdfest.cz</p></div><figure class="media media-shot">{{ m.pic('asd-web', 'asdfest.cz', '(min-width: 900px) 60vw, 94vw') }}</figure></div></section>
+{% endif %}
+{% set gx = (v.gallery or []) | reject('equalto', v.img) | list %}
+{% if gx %}
+<section class="sec sec-tight"><div class="wrap gal gal-3">
+  {% for k in gx %}<figure>{{ m.pic(k, v.alts[v.gallery.index(k)], '(min-width: 900px) 32vw, 46vw') }}</figure>{% endfor %}
+</div></section>
+{% endif %}
+
+{% if v.quote %}
+<section class="sec sec-cream"><div class="wrap pullq">
+  <figure class="pullq-img">{{ m.pic('valerie-brand', v.quote[1], '(min-width: 900px) 30vw, 70vw') }}</figure>
+  <figure class="bigq"><blockquote><p>{{ v.quote[0] }}</p></blockquote><figcaption><span class="bigq-name">{{ v.quote[1] }}</span><span class="lbl">{{ v.quote[2] }}</span></figcaption></figure>
+</div></section>
+{% endif %}
+
+{{ m.next_link(ui.next ~ ' · Built by', nxt.name, m.href('built-by/' ~ nxt.slug ~ '/')) }}
+{{ m.cta() }}
+{% endblock %}

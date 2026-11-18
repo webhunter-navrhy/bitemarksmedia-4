@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.contact %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+<section class="phero">
+  <div class="wrap">
+    {{ m.crumbs([('', ui.talk)]) }}
+    <div class="contact-grid">
+      <div class="contact-copy">
+        <p class="lbl" lang="en">{{ P.kicker }}</p>
+        <h1 class="phero-h1 phero-h1-md">{{ P.h1 | acc }}</h1>
+        <p class="contact-lead">{{ P.lead }}</p>
+        <div class="direct">
+          <p class="lbl">{{ P.direct }}</p>
+          <a class="direct-mail" href="mailto:{{ c.email }}">{{ c.email }}</a>
+          <a class="direct-tel" href="tel:{{ c.phone_href }}">{{ c.phone }}</a>
+          <ul class="direct-people" role="list">
+            {% for p in t.about.team %}<li><span class="dp-photo">{{ m.pic('p-' ~ p.key, '', '4rem') }}</span><span><b>{{ p.name }}</b><br>{{ p.role }}</span><span class="dp-links"><a href="tel:{{ p.phone | replace(' ', '') }}">{{ p.phone }}</a><a href="mailto:{{ p.email }}">{{ p.email }}</a></span></li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+      <form class="cform" id="cform" data-mail="{{ c.email }}" data-subject="{{ P.f_subject }}" data-api="https://webhunter-admin.webhunter.workers.dev/api/bitemarksmedia/form" data-lang="{{ t.lang }}" novalidate>
+        <p class="cform-title">{{ P.form_title }}</p>
+        <fieldset class="chips">
+          <legend>{{ P.f_interest }}</legend>
+          {% for s in t.services %}<label class="chipc"><input type="checkbox" name="interest" value="{{ s.name }}" data-slug="{{ s.slug }}"><span lang="en">{{ s.name }}</span></label>{% endfor %}
+        </fieldset>
+        <div class="f2">
+          <label class="fld"><span>{{ P.f_name }} *</span><input name="name" required autocomplete="name"></label>
+          <label class="fld"><span>{{ P.f_company }}</span><input name="company" autocomplete="organization"></label>
+        </div>
+        <div class="f2">
+          <label class="fld"><span>{{ P.f_email }} *</span><input name="email" type="email" required autocomplete="email"></label>
+          <label class="fld"><span>{{ P.f_phone }}</span><input name="phone" type="tel" autocomplete="tel"></label>
+        </div>
+        <label class="fld"><span>{{ P.f_msg }} *</span><textarea name="msg" rows="5" required></textarea></label>
+        <button class="btn btn-gloss" type="submit"><span>{{ P.f_send }}</span>{{ m.arrow() }}</button>
+        <p class="cform-msg" role="status" aria-live="polite" hidden></p>
+        <p class="cform-note">{{ P.f_note }}</p>
+        <label class="cform-hp" aria-hidden="true">Web <input name="website" tabindex="-1" autocomplete="off"></label>
+      </form>
+    </div>
+  </div>
+</section>
+{{ m.office(t.about) }}
+{% endblock %}

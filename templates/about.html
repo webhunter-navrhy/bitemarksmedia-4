@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.about %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+{{ m.page_hero(P.kicker, P.h1, P.lead, [('', ui.nav[4][1])]) }}
+
+<section class="sec sec-top" aria-labelledby="h-team">
+  <div class="wrap">
+    <h2 class="sr" id="h-team">{{ P.team_kicker }}</h2>
+    <div class="members">
+      {% for p in P.team %}
+      <article class="member">
+        <div class="member-img person-img">{{ m.pic('p-' ~ p.key, p.name, '(min-width: 900px) 22vw, 94vw') }}<svg class="person-ring" viewBox="0 0 200 200" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="100" cy="100" rx="98" ry="97"/></svg></div>
+        <div class="member-copy">
+          <h3 class="member-name">{{ p.name }}</h3>
+          <p class="lbl" lang="en">{{ p.role }}</p>
+          <p class="member-line">{{ p.line }}</p>
+          <p class="member-off"><b>{{ p.off_title }}</b> {{ p.off }}</p>
+          <ul class="member-contacts" role="list">
+            <li><a href="tel:{{ p.phone | replace(' ', '') }}">{{ p.phone }}</a></li>
+            <li><a href="mailto:{{ p.email }}">{{ p.email }}</a></li>
+          </ul>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-cream" aria-labelledby="h-story">
+  <div class="wrap story">
+    <figure class="story-photo">{{ m.pic('valerie-brand', 'Valérie Čížková', '(min-width: 900px) 36vw, 94vw') }}</figure>
+    <div class="story-copy">
+      <p class="lbl">{{ P.story_kicker }}</p>
+      <h2 class="h2" id="h-story">{{ P.story_title | acc }}</h2>
+      {% for p in P.story %}<p class="story-p{% if loop.first %} story-lead{% endif %}">{{ p }}</p>{% endfor %}
+      <p class="story-sign">{{ P.story_sign }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec phil" aria-labelledby="h-values">
+  <div class="wrap phil-grid">
+    <figure class="phil-img">{{ m.pic('r-suede-p', '', '(min-width: 900px) 40vw, 94vw') }}</figure>
+    <div class="phil-copy">
+      <p class="lbl">{{ P.values_kicker }}</p>
+      <h2 class="h2" id="h-values" lang="en">{{ t.home.phil_title }}</h2>
+      <ul class="values" role="list">
+        {% for v, d in P['values'] %}<li><span class="values-t">{{ v }}</span><span class="values-d">{{ d }}</span></li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-cream" aria-labelledby="h-process">
+  <div class="wrap split">
+    <div class="split-head"><p class="lbl">{{ P.process_kicker }}</p><h2 class="h3" id="h-process">{{ P.process_kicker }}</h2></div>
+    <ul class="items" role="list">
+      {% for tt, d in P.process %}<li><h3 class="items-t">{{ tt }}</h3><p class="items-d">{{ d }}</p></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="h-quotes">
+  <div class="wrap">
+    {{ m.head(P.quotes_kicker, t.v4.quotes_title, 'h-quotes') }}
+    <div class="qlist">
+      {% for q, who, org in P.quotes %}
+      <figure><blockquote><p>{{ q }}</p></blockquote><figcaption><b>{{ who }}</b>{% if org %} · {{ org }}{% endif %}</figcaption></figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ m.partner_wall(P) }}
+{{ m.office(P) }}
+{{ m.cta() }}
+{% endblock %}

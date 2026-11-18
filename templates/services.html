@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.services_page %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+{{ m.page_hero(P.kicker, P.h1, P.lead, [('', ui.nav[0][1])], img='r-suede', tone='', cls='phero-wide') }}
+
+<section class="sec sec-top" aria-label="{{ P.kicker }}">
+  <div class="wrap">
+    <ol class="rows" role="list">
+      {% for s in t.services %}
+      <li><a class="row" href="{{ m.href('sluzby/' ~ s.slug ~ '/') }}">
+        <span class="row-img{% if not SERVICE_IMG[s.slug].startswith('r-') %} bw{% endif %}">{{ m.pic(SERVICE_IMG[s.slug], '', '12rem') }}</span>
+        <span class="row-name" lang="en">{{ s.name }}</span>
+        <span class="row-short">{{ s.short }}</span>
+        <span class="row-go">{{ m.arrow() }}</span>
+      </a></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="sec sec-cream" aria-labelledby="h-areas">
+  <div class="wrap split">
+    <div class="split-head"><p class="lbl">{{ P.areas_kicker }}</p><h2 class="h3" id="h-areas">{{ t.home.intro_big }}</h2></div>
+    <ol class="areas areas-list" role="list">
+      {% for a, d in P.areas %}<li><span class="areas-i">{{ '%02d' % loop.index }}</span><span class="areas-n">{{ a }}</span><span class="areas-d">{{ d }}</span></li>{% endfor %}
+    </ol>
+  </div>
+</section>
+{{ m.cta() }}
+{% endblock %}

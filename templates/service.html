@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% block title %}{{ s.name }} — {{ s.h1 }} | Bite Marks Media{% endblock %}
+{% block description %}{{ s.lead[:155] }}{% endblock %}
+{% block main %}
+{{ m.page_hero(s.name, s.h1, s.lead, [('sluzby/', ui.nav[0][1]), ('', s.name)], side=SERVICE_IMG[s.slug], side_tone=('' if SERVICE_IMG[s.slug].startswith('r-') else 'bw')) }}
+
+<section class="sec" aria-labelledby="h-items">
+  <div class="wrap split">
+    <div class="split-head">
+      <p class="lbl">{{ ui.services }}</p>
+      <h2 class="h3" id="h-items">{{ s.short }}</h2>
+    </div>
+    <ul class="items" role="list">
+      {% for it in s['items'] %}
+      <li><h3 class="items-t">{{ it[0] }}</h3><p class="items-d">{{ it[1] }}</p></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec sec-cream" aria-labelledby="h-rel">
+  <div class="wrap">
+    {{ m.head(ui.related, ui.all_work, 'h-rel', m.href('prace/'), ui.all_work, cls='shead-sm') }}
+    <div class="wtiles">
+      {% for slug in s.work %}
+        {% set w = (t.work | selectattr('slug', 'equalto', slug) | first) %}
+        {% if w %}{{ m.work_tile(w) }}{% else %}{% set v = (t.ventures | selectattr('slug', 'equalto', slug) | first) %}{% if v %}{{ m.venture_tile(v) }}{% endif %}{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ m.next_link(ui.next_service, nxt.name, m.href('sluzby/' ~ nxt.slug ~ '/')) }}
+{{ m.cta() }}
+{% endblock %}

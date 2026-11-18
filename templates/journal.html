@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.journal_page %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+{{ m.page_hero(P.kicker, P.h1, P.lead, [('', 'Journal')]) }}
+<section class="sec sec-top" aria-label="Journal">
+  <div class="wrap">
+    {% set f = t.posts[0] %}
+    <article class="post post-feat"><a href="{{ f[4] }}" target="_blank" rel="noopener" lang="cs">
+      <span class="post-img bw">{{ m.pic(f[0], '', '(min-width: 900px) 58vw, 94vw') }}</span>
+      <span class="post-feat-copy">
+        <span class="lbl post-meta">{{ f[2] }} · {{ f[1] }}</span>
+        <span class="post-title">{{ f[3] }}</span>
+        <span class="tlink"><span>{{ ui.read_article }}</span>{{ m.ext() }}</span>
+      </span>
+    </a></article>
+    <div class="posts posts-more">
+      {% for p in t.posts[1:] %}{{ m.post(p) }}{% endfor %}
+    </div>
+    <p class="center"><a class="btn btn-gloss" href="{{ c.journal }}" target="_blank" rel="noopener"><span>{{ P.cta }}</span>{{ m.ext() }}</a></p>
+  </div>
+</section>
+{{ m.cta() }}
+{% endblock %}

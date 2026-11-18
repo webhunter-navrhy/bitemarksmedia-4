@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% set P = t.work_page %}
+{% block title %}{{ P.title }}{% endblock %}
+{% block description %}{{ P.description }}{% endblock %}
+{% block main %}
+{{ m.page_hero(P.kicker, P.h1, P.lead, [('', ui.nav[1][1])]) }}
+
+<section class="sec sec-top" aria-label="{{ P.kicker }}">
+  <div class="wrap">
+    <div class="filters" role="group" aria-label="Filtr">
+      <button type="button" class="chip is-on" data-f="*">{{ 'Vše' if t.lang == 'cs' else 'All' }}</button>
+      {% for d in ['Editorials', 'Campaigns', 'Media', 'Events', 'Experiences', 'Built by'] %}<button type="button" class="chip" data-f="{{ d }}" lang="en">{{ d }}</button>{% endfor %}
+    </div>
+    <div class="wgrid">
+      {% for w in t.work %}<div class="fi" data-d="{{ w.cat or w.disc }}">{{ m.work_tile(w) }}</div>{% endfor %}
+      {% for v in t.ventures if v.slug != 'asd-fest' and v.img %}<div class="fi" data-d="Built by">{{ m.venture_tile(v) }}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-cream" aria-labelledby="h-more">
+  <div class="wrap split">
+    <div class="split-head"><p class="lbl">{{ P.more_kicker }}</p><h2 class="h3" id="h-more">{{ P.more_title }}</h2></div>
+    <ul class="more" role="list">
+      {% for name, what, tag in P.more %}
+      <li><span class="more-client">{{ name }}</span><span class="more-what">{{ what }}</span><span class="lbl">{{ tag }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{{ m.cta() }}
+{% endblock %}

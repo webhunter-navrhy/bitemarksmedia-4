@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% import '_m.html' as m with context %}
+{% block title %}{{ w.title | replace('*', '') }} — {{ w.client }} | Bite Marks Media{% endblock %}
+{% block description %}{{ w.lead[:155] }}{% endblock %}
+{% block main %}
+<section class="phero">
+  <div class="wrap">
+    {{ m.crumbs([('prace/', ui.nav[1][1]), ('', w.client)]) }}
+    <div class="phero-grid">
+      <div>
+        <p class="lbl phero-k"><span lang="en">{{ w.disc }}</span>{% if not w.hide_client %} · {{ w.client }}{% endif %}</p>
+        <h1 class="phero-h1">{{ w.title | acc }}</h1>
+      </div>
+      <div class="phero-lead">
+        <p>{{ w.lead }}</p>
+      </div>
+    </div>
+    <div class="case-facts">{{ m.meta_list(([] if w.hide_client else [(ui.client, w.client)]) + [(ui.year, w.year), (ui.role, w.role | join(' · '))]) }}</div>
+  </div>
+</section>
+
+{% if w.slug == 'forbes' %}
+<section class="wrap" aria-label="{{ ui.open_mag }}">
+  <div class="cover-stage">{{ m.covers(reader=True, sizes='(min-width: 900px) 20vw, 44vw', mags=w.mags or ()) }}</div>
+  <ul class="mags" role="list">
+    {% for k, name, d in w.mags %}
+    <li><button type="button" class="mag" data-mag="{{ k }}" data-title="{{ name }}">
+      <span class="mag-name">{{ name }}</span><span class="mag-d">{{ d }}</span><span class="mag-open">{{ ui.open_mag }} {{ m.arrow() }}</span>
+    </button></li>
+    {% endfor %}
+  </ul>
+</section>
+{% elif w.slug == 'aero' %}
+<section class="wrap">
+  <div class="aero">
+    <div class="aero-video">
+      <video id="aeroVideo" muted loop playsinline preload="none" poster="{{ base }}img/aero-poster-{{ IMG['aero-poster'].w[-1] }}.webp?v={{ IMG['aero-poster'].v }}" width="{{ VIDEO.w }}" height="{{ VIDEO.h }}" data-src="{{ base }}media/aero.mp4?v={{ VIDEO.v }}" aria-label="To dá rozum"></video>
+      <button class="sound" type="button" aria-pressed="false"><span class="sound-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="spk" d="M4 9v6h4l5 4V5L8 9z"/><path class="s-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="s-off" d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg></span><span>{{ ui.sound }}</span></button>
+    </div>
+    {% for k in w.gallery[:2] %}<figure class="aero-ph">{{ m.pic(k, w.alts[loop.index0], '(min-width: 900px) 28vw, 94vw') }}</figure>{% endfor %}
+  </div>
+</section>
+{% elif w.slug == 'socialni-site' %}
+<section class="wrap"><figure class="media media-cream">{{ m.pic('r-cars', w.title, '(min-width: 1400px) 1320px, 94vw') }}</figure></section>
+{% elif w.slug == 'merchandise' %}
+<section class="wrap"><figure class="media">{{ m.pic(w.gallery[0] if w.gallery else w.img, w.title, '(min-width: 1400px) 1320px, 94vw') }}</figure></section>
+{% elif w.slug == 'asd-fest' %}
+<section class="wrap"><div class="asdhero">
+  <figure class="asdhero-main">{{ m.pic(w.gallery[0], w.alts[0], '(min-width: 900px) 64vw, 94vw') }}</figure>
+  <figure class="asdhero-side">{{ m.pic(w.gallery[1], w.alts[1], '(min-width: 900px) 30vw, 94vw') }}</figure>
+</div></section>
+{% elif w.img %}
+<section class="wrap"><figure class="media">{{ m.pic(w.img, w.title | replace('*', ''), '(min-width: 1400px) 1320px, 94vw') }}</figure></section>
+{% endif %}
+
+<section class="sec" aria-label="{{ w.title }}">
+  <div class="wrap">
+    <div class="blocks">
+      {% for title, text in w.blocks %}<div class="block"><p class="block-t">{{ title }}</p><p class="block-d">{{ text }}</p></div>{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if w.quote %}
+<section class="sec sec-tight sec-cream"><div class="wrap">
+  <figure class="bigq"><blockquote><p>{{ w.quote[0] }}</p></blockquote><figcaption><span class="bigq-name">{{ w.quote[1] }}</span><span class="lbl">{{ w.quote[2] }}</span></figcaption></figure>
+</div></section>
+{% endif %}
+
+{% if w.slug == 'aero' %}
+<section class="sec sec-tight"><div class="wrap gal gal-4">
+  {% for k in w.gallery[2:] %}<figure>{{ m.pic(k, w.alts[loop.index0 + 2], '(min-width: 900px) 24vw, 46vw') }}</figure>{% endfor %}
+</div></section>
+{% elif w.slug == 'socialni-site' %}
+<section class="sec sec-tight"><div class="wrap sets">
+  {% for k, name in w.sets %}
+  <div class="set"><p class="set-name">{{ name }}</p><div class="set-row">{% for n in (1, 2, 3) %}{% if ('car-' ~ k ~ '-' ~ n) in IMG %}<figure>{{ m.pic('car-' ~ k ~ '-' ~ n, name ~ ' – ' ~ n, '(min-width: 900px) 22vw, 70vw') }}</figure>{% endif %}{% endfor %}</div></div>
+  {% endfor %}
+</div></section>
+{% elif w.slug == 'asd-fest' %}
+<section class="sec sec-tight"><div class="wrap gal gal-asd">
+  {% for k in w.gallery[2:] %}<figure>{{ m.pic(k, w.alts[loop.index0 + 2], '(min-width: 900px) 32vw, 46vw') }}</figure>{% endfor %}
+</div>
+<div class="wrap asd-more"><a class="tlink" href="{{ m.href('built-by/asd-fest/') }}"><span>{{ 'ASD Fest jako vlastní projekt' if t.lang == 'cs' else 'ASD Fest as our own venture' }}</span>{{ m.arrow() }}</a><a class="tlink" href="{{ w.link[1] }}" target="_blank" rel="noopener"><span>{{ w.link[0] }}</span>{{ m.ext() }}</a></div></section>
+{% elif w.slug == 'merchandise' %}
+<section class="sec sec-tight"><div class="wrap gal gal-masonry">
+  {% for k in w.gallery[1:] %}<figure>{{ m.pic(k, w.title, '(min-width: 900px) 30vw, 46vw') }}</figure>{% endfor %}
+</div></section>
+{% elif w.gallery %}
+<section class="sec sec-tight"><div class="wrap gal gal-asd">
+  {% for k in w.gallery %}<figure>{{ m.pic(k, w.alts[loop.index0], '(min-width: 900px) 32vw, 46vw') }}</figure>{% endfor %}
+</div>{% if w.link and w.link[1] %}
+<div class="wrap asd-more"><a class="tlink" href="{{ w.link[1] }}" target="_blank" rel="noopener"><span>{{ w.link[0] or w.link[1] }}</span>{{ m.ext() }}</a></div>{% endif %}</section>
+{% endif %}
+
+{{ m.next_link(ui.next_case ~ ' · ' ~ nxt.client, nxt.title, m.href('prace/' ~ nxt.slug ~ '/')) }}
+{{ m.cta() }}
+{% endblock %}
+{% block after %}{% if w.slug == 'forbes' %}{{ m.reader() }}{% endif %}{% endblock %}
