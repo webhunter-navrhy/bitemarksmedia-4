@@ -9,10 +9,7 @@
 {# 01 HERO – zaoblený panel, lesklý vínový prstenec v proužcích okenního světla #}
 <section class="hero" aria-labelledby="h-hero">
   <div class="hero-panel">
-    <picture class="hero-bg" aria-hidden="true">
-      <source media="(max-width: 699px)" srcset="{% for w in IMG['r4-hero-m'].w %}{{ base }}img/r4-hero-m-{{ w }}.webp?v={{ IMG['r4-hero-m'].v }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="100vw">
-      {{ m.pic('r4-hero', '', '100vw', 'hero-img', eager=True) }}
-    </picture>
+    <div class="hero-light" aria-hidden="true"></div>
     <div class="hero-copy">
       <p class="pill pill-glass hero-k"><i class="dot" aria-hidden="true"></i>{{ H.kicker }}</p>
       <h1 class="hero-h1" id="h-hero">{{ X.hero_h1 | acc }}</h1>
@@ -21,6 +18,10 @@
         <a class="btn btn-maroon" href="{{ m.href('kontakt/') }}"><span>{{ ui.cta_button }}</span>{{ m.arrow() }}</a>
         <a class="btn btn-glass" href="{{ m.href('prace/') }}"><span>{{ ui.all_work }}</span></a>
       </div>
+    </div>
+    <div class="hero-stack">
+      <figure class="hs hs-1">{{ m.pic('asd-021', 'Aerospace & Defence Fest – rozhovor pro média' if cs else 'Aerospace & Defence Fest – media interview', '(min-width: 700px) 31vw, 64vw', eager=True) }}<figcaption class="hs-cap" lang="en">Aerospace &amp; Defence Fest</figcaption></figure>
+      <figure class="hs hs-2">{{ m.pic('haso-arch', 'Hasoběh – start běhu' if cs else 'Hasoběh – the start line', '(min-width: 700px) 15vw, 36vw', eager=True) }}<figcaption class="hs-cap">Hasoběh</figcaption></figure>
     </div>
     <svg class="sticker hero-sticker" viewBox="0 0 200 200" aria-hidden="true">
       <defs><path id="stk" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
@@ -51,7 +52,7 @@
     <p class="pill pill-line">Studio</p>
     <h2 class="intro-big" id="h-intro" lang="en">{{ H.intro_big }}</h2>
     <div class="intro-grid">
-      <figure class="intro-img">{{ m.pic('r4-plinth', '', '(min-width: 900px) 36vw, 90vw') }}</figure>
+      <figure class="intro-img">{{ m.pic('asd-008', 'Valerie a Maryna na pódiu Aerospace & Defence Fest' if cs else 'Valerie and Maryna on stage at Aerospace & Defence Fest', '(min-width: 900px) 36vw, 90vw') }}<figcaption class="intro-cap">{{ 'Slovo pořadatelek · ASD Fest' if cs else 'Opening words · ASD Fest' }}</figcaption></figure>
       <div class="intro-copy">
         <p class="intro-p2">{{ X.intro_p2 }}</p>
         <a class="btn btn-cream" href="{{ m.href('o-nas/') }}"><span>{{ X.intro_btn }}</span>{{ m.arrow() }}</a>
@@ -88,7 +89,11 @@
         {% endfor %}
       </ol>
       <aside class="cfg-card" aria-labelledby="cfg-t">
-        <figure class="cfg-card-img" aria-hidden="true">{{ m.pic('r4-drape', '', '(min-width: 1000px) 34vw, 90vw') }}</figure>
+        <figure class="cfg-card-img" aria-hidden="true">
+          <span class="cci on" data-cci="">{{ m.pic('of-meet', '', '(min-width: 1000px) 34vw, 90vw') }}</span>
+          {% for s in t.services %}<span class="cci" data-cci="{{ s.slug }}">{{ m.pic(SERVICE_IMG[s.slug], '', '(min-width: 1000px) 34vw, 90vw') }}</span>{% endfor %}
+          <span class="cci-cap" data-cci-cap>{{ 'Náměstí Republiky 7, Praha' if cs else 'Náměstí Republiky 7, Prague' }}</span>
+        </figure>
         <div class="cfg-card-in">
           <p class="cfg-card-k lbl" id="cfg-t">{{ 'Vaše spolupráce' if cs else 'Your collaboration' }}</p>
           <p class="cfg-count" aria-live="polite"><b data-cfg-n>0</b><span>/ 6 {{ 'disciplín' if cs else 'disciplines' }}</span></p>
@@ -147,7 +152,7 @@
 {# 06 FILOZOFIE – papíry a stuha, krémová karta #}
 <section class="phil" aria-labelledby="h-phil">
   <div class="phil-in">
-    <figure class="phil-bg" aria-hidden="true">{{ m.pic('r4-paper', '', '100vw') }}</figure>
+    <figure class="phil-bg" aria-hidden="true">{{ m.pic('of-atrium2', '', '100vw') }}</figure>
     <div class="phil-card">
       <p class="pill pill-blue" lang="en">{{ H.phil_kicker }}</p>
       <h2 class="h2" id="h-phil" lang="en">{{ X.phil_title | acc }}</h2>

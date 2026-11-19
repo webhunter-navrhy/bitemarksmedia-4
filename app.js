@@ -159,8 +159,13 @@
   const cfg = $("[data-cfg]");
   if (cfg) {
     const togs = $$(".cfg-tog", cfg), chipsEl = $("[data-cfg-chips]", cfg), nEl = $("[data-cfg-n]", cfg), empty = $("[data-cfg-empty]", cfg), go = $(".cfg-go", cfg);
+    const ccis = $$("[data-cci]", cfg), cap = $("[data-cci-cap]", cfg), cap0 = cap ? cap.textContent : "";
+    let last = "";
     const sync = () => {
       const on = togs.filter(t => t.getAttribute("aria-pressed") === "true");
+      if (!on.some(t => t.dataset.slug === last)) last = on.length ? on[on.length - 1].dataset.slug : "";
+      ccis.forEach(c => c.classList.toggle("on", c.dataset.cci === last));
+      if (cap) { const lt = togs.find(t => t.dataset.slug === last); cap.textContent = lt ? lt.dataset.name : cap0; }
       nEl.textContent = on.length;
       chipsEl.replaceChildren();
       on.forEach(t => {
@@ -174,7 +179,9 @@
       go.href = go.dataset.href + (on.length ? "?z=" + on.map(t => t.dataset.slug).join(",") : "") + "#cform";
     };
     togs.forEach(t => t.addEventListener("click", () => {
-      t.setAttribute("aria-pressed", String(t.getAttribute("aria-pressed") !== "true"));
+      const was = t.getAttribute("aria-pressed") === "true";
+      t.setAttribute("aria-pressed", String(!was));
+      if (!was) last = t.dataset.slug;
       const row = t.closest(".cfg-row"); row.classList.remove("pop"); void row.offsetWidth; row.classList.add("pop");
       sync();
     }));

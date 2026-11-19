@@ -117,7 +117,13 @@
 {%- macro cta() -%}
 <section class="cta" aria-labelledby="h-cta">
   <div class="cta-panel">
-    <figure class="cta-bg" aria-hidden="true">{{ pic('r4-hero2', '', '100vw') }}</figure>
+    <div class="cta-light" aria-hidden="true"></div>
+    <figure class="cta-duo">
+      <span class="cta-face cf-1">{{ pic('p-valerie', 'Valerie', '(min-width: 700px) 15vw, 40vw') }}</span>
+      <span class="cta-face cf-2">{{ pic('p-maryna', 'Maryna', '(min-width: 700px) 15vw, 40vw') }}</span>
+      <svg class="cta-ring" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><ellipse cx="100" cy="50" rx="97" ry="45"/></svg>
+      <figcaption class="cta-cap">{{ 'Valerie & Maryna – odpovídáme do 24 h' if t.lang == 'cs' else 'Valerie & Maryna – we reply within a day' }}</figcaption>
+    </figure>
     <div class="cta-in">
       <p class="pill pill-glass" lang="en"><i class="dot" aria-hidden="true"></i>Let’s talk</p>
       <h2 class="cta-title" id="h-cta" lang="en">Ready to leave a {{ ring('mark?') }}</h2>

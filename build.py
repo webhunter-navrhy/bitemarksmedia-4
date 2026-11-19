@@ -75,13 +75,6 @@ IMAGES = {
     "konf": ("Konference-Zeny-Zenam-2024_3.webp", [800, 1400, 1920], None),
     "tech": ("DSC03180.webp", [800, 1400, 1920], None),
     "haso-trail": ("v/haso-9.jpg", [600, 941], None),
-    # V4 – nový brand: bordó lesklá páska v pudrově modrém studiu (vlastní rendery)
-    "r4-hero": ("r4/hero1.png", [960, 1600], None),
-    "r4-hero2": ("r4/hero2.png", [960, 1600], None),
-    "r4-hero-m": ("r4/heroM.png", [600, 896], None),
-    "r4-drape": ("r4/drape.png", [800, 1600], None),
-    "r4-plinth": ("r4/plinth.png", [600, 900, 1200], None),
-    "r4-paper": ("r4/paper.png", [800, 1600], None),
 }
 for i, src in enumerate(["Premiovy-merchandise-12", "Premiovy-merchandise-3", "Premiovy-merchandise-6", "Premiovy-merchandise-10",
                          "Premiovy-merchandise-8", "Premiovy-merchandise-7", "Premiovy-merchandise", "Premiovy-merchandise-4",

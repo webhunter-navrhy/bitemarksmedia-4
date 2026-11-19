@@ -1169,3 +1169,76 @@ button.cov:hover { transform: translateY(-10px) rotate(0deg); box-shadow: 0 40px
   .pwall-head, .office-head { grid-template-columns: minmax(0, 1fr); }
   .pwall-head > *, .office-head > * { grid-column: 1 / -1; }
 }
+
+/* ================================================================== V4 – skutečné fotky místo 3D renderů (19. 11.) */
+.hero-panel, .cta-panel { background: radial-gradient(110% 130% at 12% -10%, #D3E4EF 0%, #AFCBDD 42%, #86AAC2 100%); }
+.hero-panel::after { background: linear-gradient(0deg, rgba(234, 242, 247, .28), transparent 26%); }
+.cta-panel::after { content: none; }
+.hero-light, .cta-light {
+  position: absolute; inset: -12%; z-index: -1; pointer-events: none; filter: blur(16px);
+  background: repeating-linear-gradient(116deg, transparent 0 6%, rgba(255, 255, 255, .2) 8.5% 13.5%, transparent 16% 23%);
+  -webkit-mask: linear-gradient(100deg, #000 10%, rgba(0, 0, 0, .25) 70%); mask: linear-gradient(100deg, #000 10%, rgba(0, 0, 0, .25) 70%);
+}
+
+/* hero – dvojice fotek z akcí studia */
+.hero-stack { position: absolute; right: clamp(1.4rem, 4vw, 4.4rem); top: clamp(6.6rem, 13vh, 9rem); width: min(31vw, 34rem); animation: up 1.2s .45s var(--ease) both; }
+.hs { position: relative; margin: 0; overflow: hidden; background: var(--blue-l); border-radius: var(--r-s); box-shadow: 0 46px 80px -40px rgba(24, 40, 58, .6); }
+.hs img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hs-1 { height: clamp(20rem, calc(100svh - 23rem), 40rem); transform: rotate(1.6deg); }
+.hs-1 img { object-position: 46% 50%; }
+.hs-2 { position: absolute; left: -30%; bottom: -7%; width: 46%; aspect-ratio: 3 / 4; transform: rotate(-5deg); border: .38rem solid var(--cream); border-radius: calc(var(--r-s) + .2rem); }
+.hs-2 img { object-position: 62% 50%; }
+.hs-cap, .intro-cap, .cci-cap {
+  position: absolute; left: .7rem; bottom: .7rem; z-index: 2; display: inline-flex; align-items: center; height: 1.9rem; padding: 0 .8rem; border-radius: 999px;
+  background: rgba(244, 238, 230, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: var(--ink); font: 600 .72rem/1 var(--sans); letter-spacing: .01em; white-space: nowrap;
+}
+.hs-2 .hs-cap { left: .45rem; bottom: .45rem; height: 1.6rem; padding: 0 .6rem; font-size: .66rem; }
+.hero-sticker { right: clamp(.6rem, 1.6vw, 1.8rem); top: clamp(5.2rem, 10vh, 7rem); z-index: 2; }
+.hero-mark { z-index: 3; }
+
+/* studio – skutečná fotka zakladatelek */
+.intro-img { position: relative; }
+.intro-img img { object-position: 50% 42%; }
+
+/* konfigurátor – fotka se mění podle vybrané disciplíny */
+.cfg-card-img { position: relative; background: var(--maroon-d); }
+.cci { position: absolute; inset: 0; opacity: 0; transition: opacity .7s var(--ease); }
+.cci.on { opacity: 1; }
+.cci img { width: 100%; height: 100%; object-fit: cover; }
+.cci-cap { left: .8rem; bottom: .8rem; }
+
+/* filozofie – světlo skleněné střechy kanceláře */
+.phil-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(134, 170, 194, 0) 35%, rgba(134, 170, 194, .3)); }
+.phil-bg img { object-position: 22% 40%; }
+
+/* CTA – Valerie a Maryna */
+.cta-in { max-width: min(50rem, 58%); position: relative; }
+.cta-duo { position: absolute; right: clamp(2rem, 7vw, 7.5rem); top: 50%; width: clamp(15rem, 28vw, 27rem); aspect-ratio: 1 / .84; margin: 0; transform: translateY(-50%); }
+.cta-face { position: absolute; width: 58%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; }
+.cta-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cf-1 { left: 0; top: 0; }
+.cf-2 { right: 0; bottom: 0; }
+.cta-ring { position: absolute; left: -9%; top: -4%; width: 118%; height: 108%; overflow: visible; transform: rotate(-12deg); pointer-events: none; }
+.cta-ring ellipse { fill: none; stroke: var(--maroon); stroke-width: 2; stroke-dasharray: 12 9; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.cta-cap { position: absolute; left: 50%; bottom: -3.4rem; transform: translateX(-50%); white-space: nowrap; font: 600 .78rem/1 var(--sans); color: var(--ink); background: var(--cream); padding: .7rem 1rem; border-radius: 999px; }
+
+@media (max-width: 1000px) {
+  .hero-copy { width: min(40rem, 58%); }
+  .hero-stack { width: 27vw; }
+  .hs-2 { left: -18%; width: 52%; }
+}
+@media (max-width: 699px) {
+  .hero-stack { position: relative; right: auto; top: auto; width: 64%; margin: 2.4rem 1.6rem 0 auto; }
+  .hs-1 { height: auto; aspect-ratio: 4 / 4.6; }
+  .hs-2 { left: -52%; bottom: -10%; width: 56%; }
+  .hero-mark { padding-top: 3.4rem; }
+  .cta-panel { min-height: 0; }
+  .cta-in { max-width: none; }
+  .cta-duo { position: relative; right: auto; top: auto; transform: none; width: min(78%, 20rem); margin: 0 auto 5.4rem; }
+}
+.hs-1 .hs-cap { left: auto; right: .7rem; }
+.cta-face { background: radial-gradient(circle at 50% 35%, #FBF7F2, #EADFD3); box-shadow: 0 30px 60px -30px rgba(24, 40, 58, .55); }
+@media (max-width: 699px) {
+  .hs-2 { left: -42%; }
+  .cta-duo { margin-top: 1.8rem; }
+}
