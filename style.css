@@ -1242,3 +1242,9 @@ button.cov:hover { transform: translateY(-10px) rotate(0deg); box-shadow: 0 40px
   .hs-2 { left: -42%; }
   .cta-duo { margin-top: 1.8rem; }
 }
+/* fotky konfigurátoru – stahuje se jen zobrazená (lazy + display:none) */
+.cci { display: none; opacity: 1; transition: none; }
+.cci.on { display: block; animation: rd .7s var(--ease); }
+.qcar-dots { gap: 0; }
+.qcar-dot { width: 2.75rem; }
+@media (max-width: 699px) { .qcar-dots { gap: .2rem; } .qcar-dot { width: 1.6rem; } }
